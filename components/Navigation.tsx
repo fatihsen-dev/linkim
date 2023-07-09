@@ -1,7 +1,21 @@
 "use client";
+import { useAuthStore } from "@/store/auth";
+import { supabase } from "@/supabase";
 import Link from "next/link";
+import { toast } from "react-hot-toast";
 
 export default function Navigation({ user }: any) {
+   const { signout } = useAuthStore();
+
+   const signoutHandle = async () => {
+      const { error } = await supabase.auth.signOut();
+
+      if (error) {
+         return toast.error(error.message);
+      }
+      signout();
+   };
+
    return (
       <header>
          <nav>
@@ -9,11 +23,16 @@ export default function Navigation({ user }: any) {
                <Link className="text-2xl font-extrabold text-green-500" href="/">
                   Supabase
                </Link>
-               <ul className="flex items-center gap-10 font-semibold">
+               <ul className="flex items-center gap-5 font-semibold">
                   {user ? (
-                     <li>
-                        <Link href="/profile">Profile</Link>
-                     </li>
+                     <>
+                        <li>
+                           <Link href="/profile">Profile</Link>
+                        </li>
+                        <li>
+                           <button onClick={signoutHandle}>Logout</button>
+                        </li>
+                     </>
                   ) : (
                      <>
                         <li>

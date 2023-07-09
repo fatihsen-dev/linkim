@@ -4,6 +4,7 @@ import Navigation from "./Navigation";
 import { useCallback, useEffect, useState } from "react";
 import Loading from "./Loading";
 import { supabase } from "@/supabase";
+import { useAuthStore } from "@/store/auth";
 
 interface PropsT {
    children: React.ReactNode;
@@ -12,7 +13,7 @@ interface PropsT {
 export default function LayoutProvider({ children }: PropsT) {
    const pathname = usePathname();
    const [isLoading, setIsLoading] = useState<boolean>(true);
-   const [user, setUser] = useState<any>();
+   const { login, user } = useAuthStore();
 
    const getUser = useCallback(async () => {
       try {
@@ -21,7 +22,7 @@ export default function LayoutProvider({ children }: PropsT) {
          } = await supabase.auth.getSession();
 
          if (session) {
-            setUser(session);
+            login(session.user);
          }
       } catch (error) {
          console.log(error);
@@ -33,8 +34,6 @@ export default function LayoutProvider({ children }: PropsT) {
    useEffect(() => {
       getUser();
    }, [getUser]);
-
-   console.log(user);
 
    return (
       <>

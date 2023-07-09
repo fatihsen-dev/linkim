@@ -1,4 +1,5 @@
 "use client";
+import { useAuthStore } from "@/store/auth";
 import { supabase } from "@/supabase";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -15,6 +16,7 @@ interface InputT {
 
 export default function RegisterForm() {
    const router = useRouter();
+   const { login } = useAuthStore();
 
    const [email, setEmail] = useState<InputT>({
       value: "",
@@ -51,12 +53,26 @@ export default function RegisterForm() {
                   setPassword({ ...password, error: { state: false, message: "" } });
                   setPasswordAgain({ ...passwordAgain, error: { state: false, message: "" } });
 
-                  const { data, error } = await supabase.auth.signUp({ email: email.value, password: password.value });
+                  const {
+                     data: { user },
+                     error,
+                  } = await supabase.auth.signUp({
+                     email: email.value,
+                     password: password.value,
+                     options: {
+                        data: {
+                           role: "ADMIN",
+                        },
+                        emailRedirectTo: "http://localhost:3000/auth/login",
+                     },
+                  });
 
                   if (error) {
                      return toast.error(error.message);
                   }
-                  router.push("/auth/login");
+                  login(user);
+                  router.push("/");
+                  toast.success("Register success");
                } else {
                   setPassword({ ...password, error: { state: true, message: "Passwords not match" } });
                   setPasswordAgain({ ...passwordAgain, error: { state: true, message: "Passwords not match" } });

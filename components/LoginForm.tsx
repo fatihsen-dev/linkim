@@ -1,4 +1,5 @@
 "use client";
+import { useAuthStore } from "@/store/auth";
 import { supabase } from "@/supabase";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -15,6 +16,8 @@ interface InputT {
 
 export default function LoginForm() {
    const router = useRouter();
+   const { login } = useAuthStore();
+
    const [email, setEmail] = useState<InputT>({
       value: "",
       error: {
@@ -46,6 +49,8 @@ export default function LoginForm() {
             if (error) {
                return toast.error(error.message);
             }
+            login(data.user);
+            toast.success("Login success");
             router.push("/");
          } else {
             setPassword({ ...password, error: { state: true, message: "Minimum of 6 and a Maximum of 36" } });
