@@ -7,5 +7,20 @@ body {
    @apply h-full;
 }
 body {
-   @apply flex flex-col;
+   @apply flex flex-col bg-no-repeat bg-cover backdrop-blur-3xl bg-fixed backdrop-brightness-100 bg-[url('/images/website_bg.jpg')];
+}
+.login-register-btn {
+   background-image: linear-gradient(-45deg, white 0 50%, #22c55e 50%);
+}
+.social-slider-animation {
+   animation: socialSliderAnimation 8s linear infinite 0.5s;
+}
+
+@keyframes socialSliderAnimation {
+   from {
+      transform: translateX(100%);
+   }
+   to {
+      transform: translateX(-100%);
+   }
 }
