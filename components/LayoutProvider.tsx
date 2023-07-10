@@ -22,7 +22,7 @@ export default function LayoutProvider({ children }: PropsT) {
          } = await supabase.auth.getSession();
 
          if (session) {
-            login(session.user);
+            login(session.user as UserT);
          }
       } catch (error) {
          console.log(error);
@@ -40,10 +40,10 @@ export default function LayoutProvider({ children }: PropsT) {
          {isLoading ? (
             <Loading />
          ) : (
-            <>
+            <div className="h-screen overflow-auto flex flex-col">
                {pathname !== "/auth/login" && pathname !== "/auth/register" && <Navigation user={user} />}
                {children}
-            </>
+            </div>
          )}
       </>
    );

@@ -49,8 +49,8 @@ export default function LoginForm() {
             if (error) {
                return toast.error(error.message);
             }
-            login(data.user);
-            toast.success("Login success");
+            login(data.user as UserT);
+            toast.success("Giriş başarılı");
             router.push("/");
          } else {
             setPassword({ ...password, error: { state: true, message: "Minimum of 6 and a Maximum of 36" } });
@@ -62,7 +62,7 @@ export default function LoginForm() {
 
    return (
       <form onSubmit={onSubmit} className="flex flex-col gap-4 max-w-xs w-full">
-         <h1 className="text-center text-4xl font-bold text-green-500 mb-2 tracking-wide">Login</h1>
+         <h1 className="text-center text-4xl font-bold text-green-500 mb-2 tracking-wide">Giriş Yap</h1>
          <div className="w-full flex flex-col">
             <input
                onInput={(e: any) => setEmail({ ...email, value: e.target.value })}
@@ -81,10 +81,12 @@ export default function LoginForm() {
             />
             {password.error.state && <span className="text-xs text-red-500">{password.error.message}</span>}
          </div>
-         <button className="bg-green-500 py-1.5 hover:bg-opacity-90 transition-colors text-white rounded">Login</button>
-         <hr />
-         <Link className="underline text-center text-green-500/70 -my-2" href="/auth/register">
-            Register
+         <button className="bg-green-500 py-1.5 hover:bg-opacity-90 transition-colors text-white rounded">
+            Giriş Yap
+         </button>
+         <hr className="border-white" />
+         <Link className="underline text-center text-green-500 -my-2" href="/auth/register">
+            Kayıt Ol
          </Link>
       </form>
    );

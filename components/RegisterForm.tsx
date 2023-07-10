@@ -70,9 +70,9 @@ export default function RegisterForm() {
                   if (error) {
                      return toast.error(error.message);
                   }
-                  login(user);
+                  login(user as UserT);
                   router.push("/");
-                  toast.success("Register success");
+                  toast.success("Hesabınız oluşturuldu");
                } else {
                   setPassword({ ...password, error: { state: true, message: "Passwords not match" } });
                   setPasswordAgain({ ...passwordAgain, error: { state: true, message: "Passwords not match" } });
@@ -93,7 +93,7 @@ export default function RegisterForm() {
 
    return (
       <form onSubmit={onSubmit} className="flex flex-col gap-4 max-w-xs w-full">
-         <h1 className="text-center text-4xl font-bold text-green-500 mb-2 tracking-wide">Register</h1>
+         <h1 className="text-center text-4xl font-bold text-green-500 mb-2 tracking-wide">Kayıt Ol</h1>
          <div className="w-full flex flex-col">
             <input
                onInput={(e: any) => setEmail({ ...email, value: e.target.value })}
@@ -122,11 +122,11 @@ export default function RegisterForm() {
             {passwordAgain.error.state && <span className="text-xs text-red-500">{passwordAgain.error.message}</span>}
          </div>
          <button className="bg-green-500 py-1.5 hover:bg-opacity-90 transition-colors text-white rounded">
-            Register
+            Kayıt Ol
          </button>
-         <hr />
-         <Link className="underline text-center text-green-500/70 -my-2" href="/auth/login">
-            Login
+         <hr className="border-white" />
+         <Link className="underline text-center text-green-500 -my-2" href="/auth/login">
+            Giriş Yap
          </Link>
       </form>
    );

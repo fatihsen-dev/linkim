@@ -1,8 +1,8 @@
 import { create } from "zustand";
 
 interface InitialState {
-   user: null | object;
-   login: (usr: object | null) => void;
+   user: null | UserT;
+   login: (usr: UserT | null) => void;
    signout: () => void;
 }
 

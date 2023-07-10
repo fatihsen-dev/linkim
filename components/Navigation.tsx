@@ -14,32 +14,33 @@ export default function Navigation({ user }: any) {
          return toast.error(error.message);
       }
       signout();
+      toast.success("Çıkış başarılı");
    };
 
    return (
       <header>
          <nav>
             <div className="container flex items-center justify-between p-5 h-20">
-               <Link className="text-2xl font-extrabold text-green-500" href="/">
-                  Supabase
+               <Link className="text-3xl font-extrabold text-green-500" href="/">
+                  LINKIM
                </Link>
-               <ul className="flex items-center gap-5 font-semibold">
+               <ul className="flex items-center gap-5 font-semibold text-white">
                   {user ? (
                      <>
                         <li>
-                           <Link href="/profile">Profile</Link>
+                           <Link href="/profile">Profilim</Link>
                         </li>
                         <li>
-                           <button onClick={signoutHandle}>Logout</button>
+                           <button onClick={signoutHandle}>Çıkış Yap</button>
                         </li>
                      </>
                   ) : (
                      <>
                         <li>
-                           <Link href="/auth/login">Login</Link>
+                           <Link href="/auth/login">Giriş Yap</Link>
                         </li>
                         <li>
-                           <Link href="/auth/register">Register</Link>
+                           <Link href="/auth/register">Kayıt Ol</Link>
                         </li>
                      </>
                   )}
