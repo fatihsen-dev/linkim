@@ -12,7 +12,9 @@ interface UserT {
       providers: string[];
    };
    user_metadata: {
-      role: string;
+      avatar: string;
+      displayName: string;
+      username: string;
    };
    identities: [
       {

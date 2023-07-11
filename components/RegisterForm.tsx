@@ -1,127 +1,121 @@
 "use client";
 import { useAuthStore } from "@/store/auth";
 import { supabase } from "@/supabase";
+import { registerSchema } from "@/validation/auth";
+import { useFormik } from "formik";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { toast } from "react-hot-toast";
 
-interface InputT {
-   value: string;
-   error: {
-      state: boolean;
-      message: string;
-   };
-}
-
 export default function RegisterForm() {
+   const searchParams = useSearchParams();
    const router = useRouter();
    const { login } = useAuthStore();
 
-   const [email, setEmail] = useState<InputT>({
-      value: "",
-      error: {
-         state: false,
-         message: "",
+   const username = searchParams.get("username");
+
+   const formik = useFormik({
+      initialValues: {
+         username: username ? username : "",
+         email: "",
+         password: "",
+         passwordTwo: "",
       },
-   });
-   const [password, setPassword] = useState<InputT>({
-      value: "",
-      error: {
-         state: false,
-         message: "",
-      },
-   });
-   const [passwordAgain, setPasswordAgain] = useState<InputT>({
-      value: "",
-      error: {
-         state: false,
-         message: "",
-      },
-   });
+      validationSchema: registerSchema,
+      onSubmit: async (values) => {
+         const {
+            data: { user },
+            error,
+         } = await supabase.auth.signUp({
+            email: values.email,
+            password: values.password,
+            options: {
+               data: {
+                  avatar: "",
+                  displayName: "Kullanıcı",
+                  username: values.username,
+               },
+               emailRedirectTo: "http://localhost:3000/auth/login",
+            },
+         });
 
-   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-      e.preventDefault();
-
-      if (email.value.length > 8 && email.value.length < 30) {
-         setEmail({ ...email, error: { state: false, message: "" } });
-         if (password.value.length > 6 && password.value.length < 36) {
-            setPassword({ ...password, error: { state: false, message: "" } });
-            if (passwordAgain.value.length > 6 && passwordAgain.value.length < 36) {
-               setPasswordAgain({ ...passwordAgain, error: { state: false, message: "" } });
-               if (password.value === passwordAgain.value) {
-                  setPassword({ ...password, error: { state: false, message: "" } });
-                  setPasswordAgain({ ...passwordAgain, error: { state: false, message: "" } });
-
-                  const {
-                     data: { user },
-                     error,
-                  } = await supabase.auth.signUp({
-                     email: email.value,
-                     password: password.value,
-                     options: {
-                        data: {
-                           role: "ADMIN",
-                        },
-                        emailRedirectTo: "http://localhost:3000/auth/login",
-                     },
-                  });
-
-                  if (error) {
-                     return toast.error(error.message);
-                  }
-                  login(user as UserT);
-                  router.push("/");
-                  toast.success("Hesabınız oluşturuldu");
-               } else {
-                  setPassword({ ...password, error: { state: true, message: "Passwords not match" } });
-                  setPasswordAgain({ ...passwordAgain, error: { state: true, message: "Passwords not match" } });
-               }
-            } else {
-               setPasswordAgain({
-                  ...passwordAgain,
-                  error: { state: true, message: "Minimum of 6 and a Maximum of 36" },
-               });
-            }
-         } else {
-            setPassword({ ...password, error: { state: true, message: "Minimum of 6 and a Maximum of 36" } });
+         if (error) {
+            return toast.error(error.message);
          }
-      } else {
-         setEmail({ ...email, error: { state: true, message: "Minimum of 8 and a Maximum of 30" } });
-      }
-   };
+         login(user as UserT);
+         router.push("/");
+         toast.success("Hesabınız oluşturuldu");
+      },
+   });
 
    return (
-      <form onSubmit={onSubmit} className="flex flex-col gap-4 max-w-xs w-full">
+      <form onSubmit={formik.handleSubmit} className="flex flex-col gap-3 max-w-xs w-full">
          <h1 className="text-center text-4xl font-bold text-green-500 mb-2 tracking-wide">Kayıt Ol</h1>
          <div className="w-full flex flex-col">
             <input
-               onInput={(e: any) => setEmail({ ...email, value: e.target.value })}
+               id="username"
+               name="username"
+               value={formik.values.username}
+               onChange={formik.handleChange}
+               onBlur={formik.handleBlur}
+               className="border rounded focus:border-green-500 px-2 py-1.5 outline-none"
+               placeholder="Kullanıcı Adı"
+               type="text"
+            />
+            {formik.touched.username && formik.errors.username ? (
+               <div className="text-red-500 text-sm leading-4">{formik.errors.username}</div>
+            ) : null}
+         </div>
+         <div className="w-full flex flex-col">
+            <input
+               id="email"
+               name="email"
+               value={formik.values.email}
+               onChange={formik.handleChange}
+               onBlur={formik.handleBlur}
                className="border rounded focus:border-green-500 px-2 py-1.5 outline-none"
                placeholder="Email"
                type="email"
             />
-            {email.error.state && <span className="text-xs text-red-500">{email.error.message}</span>}
+            {formik.touched.email && formik.errors.email ? (
+               <div className="text-red-500 text-sm leading-4">{formik.errors.email}</div>
+            ) : null}
          </div>
          <div className="w-full flex flex-col">
             <input
-               onInput={(e: any) => setPassword({ ...password, value: e.target.value })}
+               id="password"
+               name="password"
+               value={formik.values.password}
+               onChange={formik.handleChange}
+               onBlur={formik.handleBlur}
                className="border rounded focus:border-green-500 px-2 py-1.5 outline-none placeholder:translate-y-1 placeholder:tracking-wider"
                placeholder="************"
                type="password"
             />
-            {password.error.state && <span className="text-xs text-red-500">{password.error.message}</span>}
+            {formik.touched.password && formik.errors.password ? (
+               <div className="text-red-500 text-sm leading-4">{formik.errors.password}</div>
+            ) : null}
          </div>
          <div className="w-full flex flex-col">
             <input
-               onInput={(e: any) => setPasswordAgain({ ...passwordAgain, value: e.target.value })}
+               id="passwordTwo"
+               name="passwordTwo"
+               value={formik.values.passwordTwo}
+               onChange={formik.handleChange}
+               onBlur={formik.handleBlur}
                className="border rounded focus:border-green-500 px-2 py-1.5 outline-none placeholder:translate-y-1 placeholder:tracking-wider"
                placeholder="************"
                type="password"
             />
-            {passwordAgain.error.state && <span className="text-xs text-red-500">{passwordAgain.error.message}</span>}
+            {formik.touched.passwordTwo && formik.errors.passwordTwo ? (
+               <div className="text-red-500 text-sm leading-4">{formik.errors.passwordTwo}</div>
+            ) : null}
          </div>
-         <button className="bg-green-500 py-1.5 hover:bg-opacity-90 transition-colors text-white rounded">
+         <button
+            type="submit"
+            disabled={!formik.isValid}
+            className="bg-green-500 py-1.5 hover:bg-opacity-90 transition-colors text-white rounded disabled:bg-opacity-80"
+         >
             Kayıt Ol
          </button>
          <hr className="border-white" />
