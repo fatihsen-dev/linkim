@@ -29,7 +29,8 @@ export default function Home() {
                linkim.vercel.app/
                <input
                   disabled={user ? true : false}
-                  value={user ? user.user_metadata.username : ""}
+                  defaultValue={user ? user.user_metadata.username : ""}
+                  value={username}
                   onInput={(e: any) => setUsername(e.target.value)}
                   className="outline-none flex-1 max-w-[150px]"
                   type="text"
