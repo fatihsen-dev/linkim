@@ -31,7 +31,9 @@ export default function Navigation({ user }: any) {
                            <Link href="/profile">Profilim</Link>
                         </li>
                         <li>
-                           <button onClick={signoutHandle}>Çıkış Yap</button>
+                           <button className="text-red-500" onClick={signoutHandle}>
+                              Çıkış Yap
+                           </button>
                         </li>
                      </>
                   ) : (
