@@ -48,7 +48,7 @@ export default function RegisterForm() {
 
          const { error: ErrorProfile, data } = await supabase
             .from("profiles")
-            .insert({ user: user?.id, username: values.username })
+            .insert({ user: user?.id, username: values.username, email: user?.email })
             .select();
 
          if (ErrorProfile) {
