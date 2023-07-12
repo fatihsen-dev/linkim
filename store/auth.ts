@@ -2,12 +2,14 @@ import { create } from "zustand";
 
 interface InitialState {
    user: null | UserT;
-   login: (usr: UserT | null) => void;
+   profile: null | ProfileT;
+   login: (user: UserT | null, profile: null | ProfileT) => void;
    signout: () => void;
 }
 
 export const useAuthStore = create<InitialState>()((set) => ({
    user: null,
-   login: (usr) => set((state) => ({ user: usr })),
-   signout: () => set((state) => ({ user: null })),
+   profile: null,
+   login: (user, profile) => set((state) => ({ user: user, profile: profile })),
+   signout: () => set((state) => ({ user: null, profile: null })),
 }));

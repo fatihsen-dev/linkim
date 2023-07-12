@@ -11,11 +11,7 @@ interface UserT {
       provider: string;
       providers: string[];
    };
-   user_metadata: {
-      avatar: string;
-      displayName: string;
-      username: string;
-   };
+   user_metadata: object;
    identities: [
       {
          id: string;
@@ -32,4 +28,12 @@ interface UserT {
    ];
    created_at: string;
    updated_at: string;
+}
+
+interface ProfileT {
+   id: number;
+   name: string | null;
+   username: "fatihsen-dev";
+   created_at: string;
+   user: string;
 }

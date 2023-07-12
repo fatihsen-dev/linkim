@@ -5,6 +5,7 @@ import { useCallback, useEffect, useState } from "react";
 import Loading from "./Loading";
 import { supabase } from "@/supabase";
 import { useAuthStore } from "@/store/auth";
+import toast from "react-hot-toast";
 
 interface PropsT {
    children: React.ReactNode;
@@ -22,7 +23,12 @@ export default function LayoutProvider({ children }: PropsT) {
          } = await supabase.auth.getSession();
 
          if (session) {
-            login(session.user as UserT);
+            const { error: ErrorProfile, data } = await supabase.from("profiles").select().eq("user", session.user.id);
+            if (ErrorProfile) {
+               return toast.error(ErrorProfile.message);
+            }
+
+            login(session.user as UserT, data[0]);
          }
       } catch (error) {
          console.log(error);

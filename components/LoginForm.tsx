@@ -49,7 +49,14 @@ export default function LoginForm() {
             if (error) {
                return toast.error(error.message);
             }
-            login(data.user as UserT);
+            const { error: ErrorProfile, data: profileData } = await supabase
+               .from("profiles")
+               .select()
+               .eq("user", data.user.id);
+            if (ErrorProfile) {
+               return toast.error(ErrorProfile.message);
+            }
+            login(data.user as UserT, profileData[0]);
             toast.success("Giriş başarılı");
             router.push("/");
          } else {

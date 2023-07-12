@@ -3,12 +3,16 @@ import Button from "@/components/Button";
 import SocialSlider from "@/components/SocialSlider";
 import { useAuthStore } from "@/store/auth";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function Home() {
-   const { user } = useAuthStore();
+   const { user, profile } = useAuthStore();
    const router = useRouter();
-   const [username, setUsername] = useState<string>("");
+   const [username, setUsername] = useState<string>(profile ? profile.username : "");
+
+   useEffect(() => {
+      if (!profile) setUsername("");
+   }, [profile]);
 
    return (
       <div className="flex h-full 2xl:flex-row lg:flex-row">
@@ -29,7 +33,6 @@ export default function Home() {
                linkim.vercel.app/
                <input
                   disabled={user ? true : false}
-                  defaultValue={user ? user.user_metadata.username : ""}
                   value={username}
                   onInput={(e: any) => setUsername(e.target.value)}
                   className="outline-none flex-1 max-w-[150px]"

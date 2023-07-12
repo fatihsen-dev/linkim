@@ -23,6 +23,14 @@ export default function RegisterForm() {
       },
       validationSchema: registerSchema,
       onSubmit: async (values) => {
+         const { error: usernameControlError, data: usernameControlData } = await supabase
+            .from("profiles")
+            .select()
+            .eq("username", values.username);
+         if (usernameControlData?.length) {
+            return toast.error(`${values.username} kullanıcı adı alinmış`);
+         }
+
          const {
             data: { user },
             error,
@@ -30,11 +38,6 @@ export default function RegisterForm() {
             email: values.email,
             password: values.password,
             options: {
-               data: {
-                  avatar: "",
-                  displayName: "Kullanıcı",
-                  username: values.username,
-               },
                emailRedirectTo: "http://localhost:3000/auth/login",
             },
          });
@@ -42,7 +45,17 @@ export default function RegisterForm() {
          if (error) {
             return toast.error(error.message);
          }
-         login(user as UserT);
+
+         const { error: ErrorProfile, data } = await supabase
+            .from("profiles")
+            .insert({ user: user?.id, username: values.username })
+            .select();
+
+         if (ErrorProfile) {
+            return toast.error(ErrorProfile.message);
+         }
+
+         login(user as UserT, data[0]);
          router.push("/");
          toast.success("Hesabınız oluşturuldu");
       },
