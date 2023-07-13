@@ -33,7 +33,7 @@ interface UserT {
 interface ProfileT {
    id: number;
    name: string | null;
-   username: "fatihsen-dev";
+   username: string;
    created_at: string;
    user: string;
 }
