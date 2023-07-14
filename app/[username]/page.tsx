@@ -33,9 +33,9 @@ export default function Page({ params: { username } }: { params: { username: str
    }
 
    return (
-      <div className="h-full flex items-center text-white flex-col gap-6 2xl:py-20 lg:py-20 py-10">
+      <div className="h-full flex items-center justify-center text-white flex-col gap-6 2xl:py-20 lg:py-20 py-10">
          <div className="flex flex-col justify-center items-center gap-4">
-            <Avvvatars size={100} style="shape" value={profile?.username || ""} />
+            <Avvvatars size={100} style="shape" value={profile?.name || ""} />
             <div className="text-center">
                {profile?.name ? (
                   <h3 className="text-2xl leading-4 font-semibold text-white">{profile.name}</h3>
@@ -60,7 +60,7 @@ export default function Page({ params: { username } }: { params: { username: str
             {links?.map((link) => (
                <li className="max-w-xs w-full" key={link.id}>
                   <a
-                     className="bg-white text-green-500 w-full flex items-center justify-center h-10 rounded-sm text-xl"
+                     className="bg-white/30 border border-white/40 text-green-500 w-full flex items-center justify-center h-10 rounded-sm text-xl"
                      target="_blank"
                      href={link.url.includes("http") ? link.url : `http://${link.url}`}
                   >
