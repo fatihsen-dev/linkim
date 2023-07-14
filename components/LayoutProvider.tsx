@@ -41,13 +41,15 @@ export default function LayoutProvider({ children }: PropsT) {
       getUser();
    }, [getUser]);
 
+   const NavigationPages = ["/", "/about", "/profile"].some((n) => n === pathname);
+
    return (
       <>
          {isLoading ? (
             <Loading />
          ) : (
             <div className="h-screen overflow-auto flex flex-col">
-               {pathname !== "/auth/login" && pathname !== "/auth/register" && <Navigation user={user} />}
+               {NavigationPages && <Navigation user={user} />}
                {children}
             </div>
          )}
