@@ -34,6 +34,7 @@ interface ProfileT {
    id: number;
    name: string | null;
    username: string;
+   email: string;
    created_at: string;
    user: string;
 }
