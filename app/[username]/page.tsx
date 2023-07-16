@@ -1,4 +1,5 @@
 "use client";
+import { linksIconAndLabel } from "@/components/NewLinkForm";
 import { supabase } from "@/supabase";
 import Avvvatars from "avvvatars-react";
 import React, { useEffect, useState } from "react";
@@ -60,10 +61,11 @@ export default function Page({ params: { username } }: { params: { username: str
             {links?.map((link) => (
                <li className="max-w-xs w-full" key={link.id}>
                   <a
-                     className="bg-white/30 border border-white/40 text-green-500 w-full flex items-center justify-center h-10 rounded-sm text-xl"
+                     className="bg-white/30 border border-white/40 text-green-500 w-full flex items-center justify-start px-4 gap-1.5 h-10 rounded-sm text-xl"
                      target="_blank"
                      href={link.url.includes("http") ? link.url : `http://${link.url}`}
                   >
+                     {linksIconAndLabel.map((l) => l.iconName === link.icon && l.icon)}
                      {link.label}
                   </a>
                </li>
