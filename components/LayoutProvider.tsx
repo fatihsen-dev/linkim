@@ -6,6 +6,7 @@ import Loading from "./Loading";
 import { supabase } from "@/supabase";
 import { useAuthStore } from "@/store/auth";
 import toast from "react-hot-toast";
+import Modal from "./Modal";
 
 interface PropsT {
    children: React.ReactNode;
@@ -51,6 +52,7 @@ export default function LayoutProvider({ children }: PropsT) {
             <div className="h-screen overflow-auto flex flex-col">
                {NavigationPages && <Navigation user={user} />}
                {children}
+               <Modal />
             </div>
          )}
       </>
