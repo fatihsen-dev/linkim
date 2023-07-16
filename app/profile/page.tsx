@@ -2,18 +2,22 @@
 import Avvvatars from "avvvatars-react";
 import { useAuthStore } from "@/store/auth";
 import { useEffect, useState } from "react";
-import NewLinkForm from "@/components/NewLinkForm";
 import ChangeNameForm from "@/components/ChangeNameForm";
 import { supabase } from "@/supabase";
 import Button from "@/components/Button";
+import { useLinksStore } from "@/store/links";
+import { AiOutlinePlusSquare } from "react-icons/ai";
+import { useModalStore } from "@/store/modal";
+import { linksIconAndLabel } from "@/components/NewLinkForm";
 
 export default function Page() {
-   const [links, setLinks] = useState<LinkT[]>([]);
+   const { setLinks, links } = useLinksStore();
+   const { active } = useModalStore();
    const [isLoading, setIsLoading] = useState<boolean>(true);
    const { profile } = useAuthStore();
 
-   const fetchData = async (email: string) => {
-      const { error: linksError, data } = await supabase.from("links").select().eq("email", email);
+   const fetchData = async () => {
+      const { error: linksError, data } = await supabase.from("links").select().eq("email", profile?.email);
 
       setLinks(data || []);
       setIsLoading(false);
@@ -21,14 +25,14 @@ export default function Page() {
 
    useEffect(() => {
       if (profile) {
-         fetchData(profile.email);
+         fetchData();
       }
    }, [profile]);
 
    return (
       <div className="flex h-full gap-10 pb-10">
          <div className="h-full p-10 max-w-[300px] w-full flex flex-col rounded-md border border-white/10 items-center gap-5 bg-white/5 backdrop-blur-md">
-            <Avvvatars size={70} style="shape" value={profile?.username || ""} />
+            <Avvvatars size={70} style="shape" value={profile?.name || ""} />
             <div className="text-center">
                {profile?.name ? (
                   <h3 className="text-xl leading-4 font-semibold text-white">{profile.name}</h3>
@@ -39,8 +43,16 @@ export default function Page() {
                <span className="leading-4 text-white/50">{profile?.username}</span>
             </div>
          </div>
-         <div className="h-full px-6 p-5 flex-1 flex flex-col rounded-md border border-white/10 bg-white/5 backdrop-blur-md gap-10">
-            <NewLinkForm fetchData={fetchData} />
+         <div className="h-full px-6 p-5 flex-1 flex flex-col rounded-md border border-white/10 bg-white/5 backdrop-blur-md gap-6">
+            <div className="flex items-center justify-end">
+               <button
+                  onClick={() => active(true, "create_new_link")}
+                  className="text-green-500 flex w-[180px] items-center gap-1.5 bg-white/40 border border-white/40 justify-center py-2 rounded"
+               >
+                  <AiOutlinePlusSquare className="text-[1.50rem]" />
+                  <span className="">Yeni bir link ekle</span>
+               </button>
+            </div>
             <div className="flex-1">
                {isLoading ? (
                   <div className="h-full flex items-center justify-center">
@@ -49,8 +61,9 @@ export default function Page() {
                ) : (
                   <ul className="flex flex-col gap-4">
                      {links.map((link) => (
-                        <li className="h-10 grid grid-cols-[200px_1fr_auto] items-stretch gap-4" key={link.id}>
-                           <div className="bg-white rounded-sm flex items-center justify-start px-4 text-lg text-green-500">
+                        <li className="h-10 grid grid-cols-[240px_1fr_auto] items-stretch gap-4" key={link.id}>
+                           <div className="bg-white rounded-sm flex items-center justify-start px-4 text-lg text-green-500 gap-1.5">
+                              {linksIconAndLabel.map((l) => l.iconName === link.icon && l.icon)}
                               {link.label}
                            </div>
                            <div className="bg-white rounded-sm flex items-center justify-start px-4 text-lg text-green-500">
