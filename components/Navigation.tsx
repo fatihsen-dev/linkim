@@ -1,21 +1,9 @@
 "use client";
-import { useAuthStore } from "@/store/auth";
-import { supabase } from "@/supabase";
+import { useModalStore } from "@/store/modal";
 import Link from "next/link";
-import { toast } from "react-hot-toast";
 
 export default function Navigation({ user }: any) {
-   const { signout } = useAuthStore();
-
-   const signoutHandle = async () => {
-      const { error } = await supabase.auth.signOut();
-
-      if (error) {
-         return toast.error(error.message);
-      }
-      signout();
-      toast.success("Çıkış başarılı");
-   };
+   const { active } = useModalStore();
 
    return (
       <header>
@@ -31,7 +19,7 @@ export default function Navigation({ user }: any) {
                            <Link href="/profile">Profilim</Link>
                         </li>
                         <li>
-                           <button className="text-red-500" onClick={signoutHandle}>
+                           <button onClick={() => active(true, "signout")} className="text-red-500">
                               Çıkış Yap
                            </button>
                         </li>
