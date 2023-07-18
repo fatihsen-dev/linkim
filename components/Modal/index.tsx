@@ -1,11 +1,12 @@
 "use client";
 import React from "react";
-import NewLinkForm from "../NewLinkForm";
+import NewLinkForm from "../forms/NewLinkForm";
 import { useModalStore } from "@/store/modal";
 import Signout from "./Signout";
+import EditProfile from "../forms/EditProfile";
 
 export default function Modal() {
-   const { status, disable, name } = useModalStore();
+   const { status, close, name } = useModalStore();
 
    const renderModal = (name: string) => {
       switch (name) {
@@ -13,16 +14,18 @@ export default function Modal() {
             return <NewLinkForm />;
          case "signout":
             return <Signout />;
+         case "edit_profile":
+            return <EditProfile />;
       }
    };
 
    return (
       <div
-         className={`absolute inset-0 flex justify-center items-center z-0 transition-opacity ${
+         className={`absolute inset-0 flex justify-center items-center z-0 transition-opacity p-4 ${
             status ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
          }`}
       >
-         <div onClick={disable} className="absolute inset-0 bg-black/50 z-[-1]"></div>
+         <div onClick={close} className="absolute inset-0 bg-black/50 z-[-1]"></div>
          {renderModal(name)}
       </div>
    );

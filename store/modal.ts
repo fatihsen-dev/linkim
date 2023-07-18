@@ -3,13 +3,13 @@ import { create } from "zustand";
 interface InitialState {
    status: boolean;
    name: string;
-   active: (status: boolean, name: string) => void;
-   disable: () => void;
+   open: (name: string) => void;
+   close: () => void;
 }
 
 export const useModalStore = create<InitialState>()((set) => ({
    status: false,
    name: "",
-   active: (status, name) => set((state) => ({ status: status, name: name })),
-   disable: () => set(() => ({ status: false })),
+   open: (name) => set((state) => ({ status: true, name: name })),
+   close: () => set(() => ({ status: false })),
 }));

@@ -37,4 +37,5 @@ interface ProfileT {
    email: string;
    created_at: string;
    user: string;
+   desc: string | null;
 }

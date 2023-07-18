@@ -4,7 +4,7 @@ import { supabase } from "@/supabase";
 import { linkSchema, urlOnlyLinkSchema } from "@/validation/link";
 import { useFormik } from "formik";
 import toast from "react-hot-toast";
-import Button from "./Button";
+import Button from "../Button";
 import { useLinksStore } from "@/store/links";
 import { Listbox } from "@headlessui/react";
 import { useState } from "react";
@@ -41,7 +41,7 @@ export const linksIconAndLabel = [
 
 export default function NewLinkForm() {
    const { user, profile } = useAuthStore();
-   const { disable } = useModalStore();
+   const { close } = useModalStore();
    const { setLinks } = useLinksStore();
    const [selected, setSelected] = useState(linksIconAndLabel[0]);
 
@@ -71,7 +71,7 @@ export default function NewLinkForm() {
 
          fetchData();
          resetForm();
-         disable();
+         close();
       },
    });
 
