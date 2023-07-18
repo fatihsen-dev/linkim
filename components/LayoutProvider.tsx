@@ -6,7 +6,7 @@ import Loading from "./Loading";
 import { supabase } from "@/supabase";
 import { useAuthStore } from "@/store/auth";
 import toast from "react-hot-toast";
-import { Modal } from "@/components/modal";
+import { Modal } from "@/components/modal/Modal";
 
 interface PropsT {
    children: React.ReactNode;
