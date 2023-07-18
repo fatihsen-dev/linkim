@@ -1,11 +1,16 @@
+"use client";
 import { useAuthStore } from "@/store/auth";
+import { useLinksStore } from "@/store/links";
 import { useModalStore } from "@/store/modal";
 import { supabase } from "@/supabase";
+import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 
 export default function Signout() {
    const { signout } = useAuthStore();
-   const { disable } = useModalStore();
+   const { close } = useModalStore();
+   const { setLinks } = useLinksStore();
+   const router = useRouter();
 
    const signoutHandle = async () => {
       const { error } = await supabase.auth.signOut();
@@ -13,7 +18,9 @@ export default function Signout() {
       if (error) {
          return toast.error(error.message);
       }
+      router.push("/");
       signout();
+      setLinks([]);
       toast.success("Çıkış başarılı");
    };
 
@@ -23,7 +30,7 @@ export default function Signout() {
          <div className="flex items-center justify-end gap-2">
             <button
                className="text-white bg-green-500 px-4 rounded py-1 transition-colors hover:bg-opacity-80"
-               onClick={disable}
+               onClick={close}
             >
                Hayır
             </button>
@@ -31,7 +38,7 @@ export default function Signout() {
                className="bg-red-500 text-white px-4 rounded py-1 transition-colors hover:bg-opacity-80"
                onClick={() => {
                   signoutHandle();
-                  disable();
+                  close();
                }}
             >
                Çıkış Yap

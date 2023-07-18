@@ -3,7 +3,7 @@ import { useModalStore } from "@/store/modal";
 import Link from "next/link";
 
 export default function Navigation({ user }: any) {
-   const { active } = useModalStore();
+   const { open } = useModalStore();
 
    return (
       <header>
@@ -12,14 +12,14 @@ export default function Navigation({ user }: any) {
                <Link className="text-3xl font-extrabold text-green-500" href="/">
                   LINKIM
                </Link>
-               <ul className="flex items-center gap-5 font-semibold text-white">
+               <ul className="flex items-center gap-5 font-medium tracking-wider text-white">
                   {user ? (
                      <>
                         <li>
                            <Link href="/profile">Profilim</Link>
                         </li>
                         <li>
-                           <button onClick={() => active(true, "signout")} className="text-red-500">
+                           <button onClick={() => open("signout")} className="text-red-500">
                               Çıkış Yap
                            </button>
                         </li>

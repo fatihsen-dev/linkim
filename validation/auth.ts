@@ -17,3 +17,15 @@ export const registerSchema = object().shape({
       .max(60, "Şifre maxsimum 60 karakter olmalıdır")
       .oneOf([ref("password")], "Şifreler eşleşmiyor"),
 });
+
+export const editProfileSchema = object().shape({
+   name: string()
+      .matches(
+         /^([A-Za-zğüşıöçĞÜŞİÖÇ]{2,})(\s[A-Za-zğüşıöçĞÜŞİÖÇ]{2,}){0,1}(\s[A-Za-zğüşıöçĞÜŞİÖÇ]{2,}(-[A-Za-zğüşıöçĞÜŞİÖÇ]{2,})?)?$/,
+         "Geçersiz isim"
+      )
+      .min(3, "İsim minimum 3 karakter olmalıdır")
+      .max(30, "İsim maxsimum 30 karakter olmalıdır")
+      .required("İsim zorunlu"),
+   desc: string().max(140, "Açıklama maxsimum 140 karakter olmalıdır"),
+});
