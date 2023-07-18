@@ -5,7 +5,7 @@ import { useModalStore } from "@/store/modal";
 import Signout from "./Signout";
 import EditProfile from "../forms/EditProfile";
 
-export const Modal = () => {
+export default function Index() {
    const { status, close, name } = useModalStore();
 
    const renderModal = (name: string) => {
@@ -29,4 +29,4 @@ export const Modal = () => {
          {renderModal(name)}
       </div>
    );
-};
+}
