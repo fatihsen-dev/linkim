@@ -34,7 +34,6 @@ Go to `http://localhost:3000` in your browser.
 ## Usage
 1. On the homepage, click on the "Login" or "Sign Up" button to log in or create an account.
 2. After logging in, you can create your profile and share your links.
-3. To explore other users' profiles, go to the "Explore" section and browse through the profiles.
 
 ## Contributing
 If you would like to contribute to the project, please submit a pull request. We welcome constructive criticism and suggestions.
