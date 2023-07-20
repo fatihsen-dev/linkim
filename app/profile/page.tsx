@@ -12,10 +12,10 @@ import { FaPencilAlt } from "react-icons/fa";
 import { notFound } from "next/navigation";
 
 export default function Page() {
-   const { setLinks, links } = useLinksStore();
+   const { setLinks, links, setEditLink } = useLinksStore();
    const { open } = useModalStore();
    const [isLoading, setIsLoading] = useState<boolean>(true);
-   const { profile, user } = useAuthStore();
+   const { profile } = useAuthStore();
 
    const fetchData = async () => {
       const { error: linksError, data } = await supabase.from("links").select().eq("email", profile?.email);
@@ -89,6 +89,10 @@ export default function Page() {
                               </a>
                            </div>
                            <Button
+                              onClick={() => {
+                                 setEditLink(link);
+                                 open("edit_link");
+                              }}
                               type="submit"
                               className="rounded-sm h-10 items-center 2xl:w-[140px] lg:w-[140px] w-full disabled:bg-opacity-80"
                            >
