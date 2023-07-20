@@ -7,73 +7,55 @@ import toast from "react-hot-toast";
 import Button from "../Button";
 import { useLinksStore } from "@/store/links";
 import { Listbox } from "@headlessui/react";
-import { useState } from "react";
-import {
-   FaBehance,
-   FaCodepen,
-   FaDiscord,
-   FaFacebook,
-   FaFigma,
-   FaGithub,
-   FaInstagram,
-   FaTiktok,
-   FaTwitch,
-   FaTwitter,
-   FaYoutube,
-} from "react-icons/fa";
-import { AiOutlineLink } from "react-icons/ai";
+import { useEffect, useState } from "react";
 import { useModalStore } from "@/store/modal";
+import { linksIconAndLabel } from "../forms/NewLinkForm";
 
-export const linksIconAndLabel = [
-   { id: 1, label: "Instagram", iconName: "instagram", icon: <FaInstagram /> },
-   { id: 2, label: "Twitter", iconName: "twitter", icon: <FaTwitter /> },
-   { id: 3, label: "Github", iconName: "github", icon: <FaGithub /> },
-   { id: 4, label: "Youtube", iconName: "youtube", icon: <FaYoutube /> },
-   { id: 5, label: "TikTok", iconName: "tikTok", icon: <FaTiktok /> },
-   { id: 6, label: "Twitch", iconName: "twitch", icon: <FaTwitch /> },
-   { id: 7, label: "Facebook", iconName: "facebook", icon: <FaFacebook /> },
-   { id: 8, label: "Figma", iconName: "figma", icon: <FaFigma /> },
-   { id: 9, label: "Codepen", iconName: "codepen", icon: <FaCodepen /> },
-   { id: 10, label: "Behance", iconName: "behance", icon: <FaBehance /> },
-   { id: 11, label: "Discord", iconName: "discord", icon: <FaDiscord /> },
-   { id: 12, label: "Diğer", iconName: "other", icon: <AiOutlineLink /> },
-];
-
-export default function NewLinkForm() {
+export default function EditLink() {
    const { user, profile } = useAuthStore();
    const { close } = useModalStore();
-   const { setLinks } = useLinksStore();
-   const [selected, setSelected] = useState(linksIconAndLabel[0]);
+   const { setLinks, editLink } = useLinksStore();
+   const [selected, setSelected] = useState(
+      linksIconAndLabel.find((li) => li.iconName == editLink?.icon) || linksIconAndLabel[0]
+   );
 
    const fetchData = async () => {
       const { data } = await supabase.from("links").select().eq("email", profile?.email);
-
       setLinks(data || []);
    };
 
    const formik = useFormik({
       initialValues: {
-         title: "",
-         url: "",
+         title: editLink?.label,
+         url: editLink?.url,
       },
       validationSchema: selected.id === 12 ? linkSchema : urlOnlyLinkSchema,
       onSubmit: async (values, { resetForm }) => {
-         const { error } = await supabase.from("links").insert({
-            label: selected.iconName === "other" ? values.title : selected.label,
-            url: values.url,
-            icon: selected.iconName,
-            email: user?.email,
-         });
+         const { error, data } = await supabase
+            .from("links")
+            .update({
+               label: selected.iconName === "other" ? values.title : selected.label,
+               url: values.url,
+               icon: selected.iconName,
+            })
+            .eq("id", editLink?.id)
+            .select();
 
          if (error) {
             return toast.error(error.message);
          }
+         console.log(data);
 
          fetchData();
          resetForm();
          close();
       },
+      enableReinitialize: true,
    });
+
+   useEffect(() => {
+      setSelected(linksIconAndLabel.find((li) => li.iconName == editLink?.icon) || linksIconAndLabel[0]);
+   }, [editLink]);
 
    return (
       <form onSubmit={formik.handleSubmit} className="grid items-stretch gap-4 max-w-md w-full bg-white rounded p-10">
@@ -133,7 +115,7 @@ export default function NewLinkForm() {
             ) : null}
          </div>
          <Button type="submit" className="rounded-sm h-10 items-center disabled:bg-opacity-80">
-            Ekle
+            Güncelle
          </Button>
       </form>
    );

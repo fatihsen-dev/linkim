@@ -4,6 +4,7 @@ import NewLinkForm from "../forms/NewLinkForm";
 import { useModalStore } from "@/store/modal";
 import Signout from "./Signout";
 import EditProfile from "../forms/EditProfile";
+import EditLink from "./EditLink";
 
 export default function Index() {
    const { status, close, name } = useModalStore();
@@ -16,6 +17,8 @@ export default function Index() {
             return <Signout />;
          case "edit_profile":
             return <EditProfile />;
+         case "edit_link":
+            return <EditLink />;
       }
    };
 
